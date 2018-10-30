@@ -1,7 +1,13 @@
 # Scalafix rules for http4s
 
-To develop rule:
+## Usage
+
+### Prerequisites
+Install [scalafix](https://scalacenter.github.io/scalafix/)
+
+### Rules
+
+#### Http4s 0.18 to 0.20 migration
 ```
-sbt ~tests/test
-# edit rules/src/main/scala/fix/Http4s.scala
+
 ```
