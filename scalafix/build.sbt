@@ -4,6 +4,19 @@ inThisBuild(
     organization := "com.alessandromarrella",
     homepage := Some(url("https://github.com/http4s/http4s")),
     licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (isSnapshot.value)
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+    },
+    scmInfo:= Some(
+      ScmInfo(
+        url("https://github.com/amarrella/http4s"),
+        "scm:git@github.com:amarrella/http4s.git"
+      )
+    ),
     developers := List(
       Developer(
         "amarrella",
@@ -58,3 +71,21 @@ lazy val tests = project
   )
   .dependsOn(rules)
   .enablePlugins(ScalafixTestkitPlugin)
+
+import ReleaseTransformations._
+
+releaseCrossBuild := true
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  releaseStepCommand("publishSigned"),
+  setNextVersion,
+  commitNextVersion,
+  releaseStepCommand("sonatypeReleaseAll"),
+  pushChanges
+)
